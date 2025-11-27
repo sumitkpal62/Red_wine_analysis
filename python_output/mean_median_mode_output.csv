@@ -1,0 +1,4 @@
+Statistics,fixed acidity,volatile acidity,citric acid,residual sugar,chlorides,free sulfur dioxide,total sulfur dioxide,density,pH,sulphates,alcohol,quality
+mean,8.32,0.53,0.27,2.54,0.09,15.87,46.47,1.0,3.31,0.66,10.42,5.64
+median,7.9,0.52,0.26,2.2,0.08,14.0,38.0,1.0,3.31,0.62,10.2,6.0
+mode,7.2,0.6,0.0,2.0,0.08,6.0,28.0,1.0,3.3,0.6,9.5,5.0
