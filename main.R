@@ -189,8 +189,27 @@ CV2<- my_data %>% summarise(across(is.numeric, ~ CoefVar(., na.rm=TRUE)))
 print(round(CV2*100,2))
 
 
+# calculating skewness of all the feature
+
+library(e1071)
+
+skewness_value<- my_data %>% summarise(across(is.numeric, ~ skewness(., na.rm = TRUE)))
+
+rownames(skewness_value)<-"Skewness"
+
+skewness_df<- rbind(
+  skewness_value
+)
+
+print(skewness_value)
 
 
+# calculate the kurtosis
+
+
+kurtosis_value<- my_data %>% summarise(across(is.numeric, ~ kurtosis(., na.rm = TRUE)))
+
+print(kurtosis_value)
 
 
 
