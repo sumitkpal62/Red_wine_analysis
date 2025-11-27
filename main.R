@@ -85,16 +85,108 @@ mode_values<- my_data %>% summarise(across(everything(), get_mode))
 print(round(mode_values, 2))
 
 
+# Using desctools to get mode
+
+library(DescTools)
+
+mode_values_descTools=mode(my_data)
+print(mode_values_descTools)
+
+
+# summary of the statistics
+
+summary_stats_df<-bind_rows(
+  "Mean"= round(mean_dplyr,2),
+  "Median"= round(median_dplyr,2),
+  "Mode"= round(mode_values,2),
+  .id= "Statistics"
+)
+
+print(summary_stats_df)
+
+## This can be done by base R method (rbind)
+
+rownames(mean_dplyr)<-"Mean"
+rownames(median_dplyr)<-"Median"
+rownames(mode_values)<-"Mode"
+
+summary_stats_rbind<-rbind(
+  round(mean_dplyr,2),
+  round(median_dplyr,2),
+  round(mode_values,2),
+)
+
+print(summary_stats_rbind)
+
+
+# Saving this data as a CSV file.
+
+
+write.csv(summary_stats_df, file = './r_output/mean_median_mode_output.csv', row.names = FALSE)
+
+
+#====================================================
+
+# Calculating min and max of the feature and check the spreadness of data
+
+min_values<- round(my_data,2) %>% summarise(across(is.numeric, ~ min(., na.rm = TRUE)))
+max_values<- round(my_data,2) %>% summarise(across(is.numeric, ~ max(., na.rm=TRUE)))
+
+print(min_values, max_values)
+
+
+range_values=max_values-min_values
+
+print(range_values)
+
+# creating dataframe with the above details
+
+min_max_df<-bind_rows(
+  'Min'=round(min_values),
+  'Max'=round(max_values),
+  'Range'=round(range_values),
+  .id = "Attributes"
+)
+
+print(min_max_df)
+
+
+# Calculate the variance, standard variance and  Q1, Q3 and IQR values of the dataset
+
+var_value<- my_data %>% summarise(across(is.numeric, ~ var(., na.rm=TRUE)))
+std_value<- my_data %>% summarise(across(is.numeric, ~ sd(., na.rm=TRUE)))
+
+print(var_value)
+print(std_value)
 
 
 
 
+Q1_value<- my_data %>% reframe(across(is.numeric, ~ quantile(., 0.25, na.rm=TRUE)))
+Q3_value<- my_data %>% reframe(across(is.numeric, ~ quantile(., 0.75, na.rm=TRUE)))
+
+IQR_value<- Q3_value-Q1_value
+
+Q_df<- bind_rows(
+  "Q1"=Q1_value,
+  "Q3"=Q3_value,
+  "IQR"=IQR_value,
+  .id = "Quartile"
+)
+
+print(Q_df)
 
 
+# Calculate the coefficient of variance
+
+CV<- (std_value/mean_dplyr)*100
+print(round(CV,2))
 
 
+# Other method
 
-
+CV2<- my_data %>% summarise(across(is.numeric, ~ CoefVar(., na.rm=TRUE)))
+print(round(CV2*100,2))
 
 
 
