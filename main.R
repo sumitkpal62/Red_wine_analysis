@@ -212,6 +212,35 @@ kurtosis_value<- my_data %>% summarise(across(is.numeric, ~ kurtosis(., na.rm = 
 print(kurtosis_value)
 
 
+# Visualize skewness and kurtosis using histogram and kernal density
+
+library('ggplot2')
+library('patchwork')
+library('tidyverse')
+
+df_long<- my_data %>% 
+  pivot_longer(
+    cols = everything(),
+    names_to = 'Feature',
+    values_to = 'Value'
+  )
+
+print(df_long)
+
+
+p_all_features <- ggplot(df_long, aes(x=Value)) +
+  geom_histogram(aes(y=after_stat(density)), bins = 30, fill='lightblue', color='black', alpha=0.7) +
+  geom_density(color='red', linewidth=1) +
+  facet_wrap(~ Feature, scales='free', ncol=3) +
+  labs(
+    title = "Distribution of All Features",
+    x = "Value",
+    y = "Density"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) # Center the title
+
+p_all_features
 
 
 
