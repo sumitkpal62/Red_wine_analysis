@@ -264,7 +264,25 @@ p_all_boxplot<-ggplot(df_long, mapping = aes(x=Feature, y=Value)) +
 p_all_boxplot
 
 
+# Visualize the data using violin plot
 
+p_all_violin<-ggplot(df_long, aes(x=Feature, y=Value)) +
+  geom_violin(fill='lightblue',draw_quantiles = c(0.25,0.75) ,quantile.colour = 'red') +
+  geom_boxplot(fill='blue', box.color = 'red', width = 0.1)+
+  facet_wrap(~ Feature, scales='free' ,ncol = 3) +
+  coord_flip() +
+  labs(
+    title = "Violinplot of all features",
+    x=NULL,
+    y="Value"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.y = element_blank(),
+    strip.text = element_text(face = 'bold')
+  )
+
+p_all_violin
 
 
 
