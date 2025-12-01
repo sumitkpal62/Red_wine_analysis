@@ -243,5 +243,33 @@ p_all_features <- ggplot(df_long, aes(x=Value)) +
 p_all_features
 
 
+# Visualize the outlier nature of each feature using boxplot
+
+
+p_all_boxplot<-ggplot(df_long, mapping = aes(x=Feature, y=Value)) +
+  geom_boxplot(fill='lightblue', color='darkblue', outlier.color = 'red') +
+  coord_flip() +
+  facet_wrap(~ Feature, scales='free_x', ncol=3) +
+  labs(
+    title = "Boxplots of All Features",
+    x = NULL, 
+    y = "Value Distribution"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.y = element_blank(), 
+    strip.text = element_text(face = "bold")
+  )
+
+p_all_boxplot
+
+
+
+
+
+
+
+
+
 
 
