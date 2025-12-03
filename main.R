@@ -111,9 +111,9 @@ rownames(median_dplyr)<-"Median"
 rownames(mode_values)<-"Mode"
 
 summary_stats_rbind<-rbind(
-  round(mean_dplyr,2),
-  round(median_dplyr,2),
-  round(mode_values,2),
+  mean_dplyr,
+  median_dplyr,
+  mode_values,
 )
 
 print(summary_stats_rbind)
@@ -129,8 +129,8 @@ write.csv(summary_stats_df, file = './r_output/mean_median_mode_output.csv', row
 
 # Calculating min and max of the feature and check the spreadness of data
 
-min_values<- round(my_data,2) %>% summarise(across(is.numeric, ~ min(., na.rm = TRUE)))
-max_values<- round(my_data,2) %>% summarise(across(is.numeric, ~ max(., na.rm=TRUE)))
+min_values<- my_data %>% summarise(across(is.numeric, ~ min(., na.rm = TRUE)))
+max_values<- my_data %>% summarise(across(is.numeric, ~ max(., na.rm=TRUE)))
 
 print(min_values, max_values)
 
@@ -249,7 +249,7 @@ p_all_features
 p_all_boxplot<-ggplot(df_long, mapping = aes(x=Feature, y=Value)) +
   geom_boxplot(fill='lightblue', color='darkblue', outlier.color = 'red') +
   coord_flip() +
-  facet_wrap(~ Feature, scales='free_x', ncol=3) +
+  facet_wrap(~ Feature, scales='free', ncol=3) +
   labs(
     title = "Boxplots of All Features",
     x = NULL, 
@@ -286,8 +286,29 @@ p_all_violin
 
 
 
+# Check relationship between two numeric feature using correlation, scatterplot
 
+regplot_feature<-ggplot(my_data, aes(x=fixed.acidity, y=volatile.acidity)) + 
+  geom_point(color='darkblue', alpha=0.6) +
+  geom_smooth(method = 'lm', se = FALSE, color='red', linewidth=1.2) +
+  labs(
+    title="Scatter plot with linear regression line",
+    x='Fixed Acidity',
+    y='Volatile Acidity',
+    
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(colour = 'darkblue', size = 12),
+    axis.text.y = element_text(colour = 'darkblue', size = 12),
+    axis.ticks = element_line(colour = 'red'),
+    axis.line.x = element_line(color='red', linewidth = 1),
+    axis.line.y = element_line(color='red', linewidth = 1),
+    title = element_text(face = 'bold', hjust = 0.5),
+    plot.title = element_text(face='bold', hjust = 0.5)
+  )
 
+regplot_feature
 
 
 
