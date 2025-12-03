@@ -113,7 +113,7 @@ rownames(mode_values)<-"Mode"
 summary_stats_rbind<-rbind(
   mean_dplyr,
   median_dplyr,
-  mode_values,
+  mode_values
 )
 
 print(summary_stats_rbind)
@@ -132,7 +132,8 @@ write.csv(summary_stats_df, file = './r_output/mean_median_mode_output.csv', row
 min_values<- my_data %>% summarise(across(is.numeric, ~ min(., na.rm = TRUE)))
 max_values<- my_data %>% summarise(across(is.numeric, ~ max(., na.rm=TRUE)))
 
-print(min_values, max_values)
+print(min_values)
+print(max_values)
 
 
 range_values=max_values-min_values
@@ -310,5 +311,52 @@ regplot_feature<-ggplot(my_data, aes(x=fixed.acidity, y=volatile.acidity)) +
 
 regplot_feature
 
+# Corr vs Covar
+
+corr_values_pearson<-cor(my_data, method = 'pearson')
+corr_values_pearson
+
+corr_values_spearman<-cor(my_data, method = 'spearman')
+corr_values_spearman
+
+covar_values<-cov(my_data)
+covar_values
+
+
+cor_df<-corr_values_pearson %>%
+  as.data.frame %>%
+  rownames_to_column("Var1")
+
+cor_long<-cor_df %>%
+  pivot_longer(
+    cols = -Var1,
+    names_to = "Var2",
+    values_to = "Correlation"
+  )
+  
+heatmap_ggplot<- ggplot(cor_long, aes(x=Var1, y=Var2, fill = Correlation)) +
+  geom_tile(color='white', linewidth = 0.5) +
+  scale_fill_gradient2(
+    low = 'red',
+    mid = 'white',
+    high = 'darkgreen',
+    midpoint = 0,
+    limit=c(-1,1),
+    name = 'Pearson\nCorrelation'
+  ) +
+  labs(
+    title = "Correlation Heatmap (ggplot2)",
+    x=NULL,
+    y=NULL
+  ) +
+  theme_minimal() +
+  theme(
+    axis.title.x = element_text(angle = 45, vjust = 1, hjust = 1, size = 10),
+    panel.grid.major = element_blank(),
+    panel.border=element_blank(),
+    plot.title = element_text(hjust = 0.5)
+  )
+
+heatmap_ggplot  
 
 
